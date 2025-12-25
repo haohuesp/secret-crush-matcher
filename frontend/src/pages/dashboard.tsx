@@ -38,7 +38,7 @@ export default function Dashboard() {
   // Load saved avatar from localStorage
   useEffect(() => {
     if (address) {
-      const savedAvatar = localStorage.getItem();
+      const savedAvatar = localStorage.getItem(`avatar_${address}`);
       if (savedAvatar) setSelectedAvatar(savedAvatar);
     }
   }, [address]);
