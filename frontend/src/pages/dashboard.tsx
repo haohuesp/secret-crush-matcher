@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useOKXWallet from '@/hooks/useOKXWallet';
 import CrushSubmitForm from '@/components/CrushSubmitForm';
 import MatchReveal from '@/components/MatchReveal';
+import AvatarSelector, { getAvatarById, AVATARS } from '@/components/AvatarSelector';
 
 interface UserStats {
   wallet_address: string;
@@ -31,6 +32,16 @@ export default function Dashboard() {
   const [showMatchReveal, setShowMatchReveal] = useState(false);
   const [newMatch, setNewMatch] = useState<Match | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+
+  // Load saved avatar from localStorage
+  useEffect(() => {
+    if (address) {
+      const savedAvatar = localStorage.getItem();
+      if (savedAvatar) setSelectedAvatar(savedAvatar);
+    }
+  }, [address]);
 
   // Redirect if not connected
   useEffect(() => {
@@ -140,6 +151,18 @@ export default function Dashboard() {
     return `hsl(${hue}, 70%, 85%)`;
   };
 
+  const handleAvatarSelect = (avatarId: string) => {
+    setSelectedAvatar(avatarId);
+    if (address) localStorage.setItem(`avatar_${address}`, avatarId);
+  };
+
+  const getDisplayAvatar = (addr: string, savedId?: string | null) => {
+    if (savedId) return getAvatarById(savedId);
+    return AVATARS[parseInt(addr.slice(-2), 16) % AVATARS.length];
+  };
+
+  const currentAvatar = address ? getDisplayAvatar(address, selectedAvatar) : AVATARS[0];
+
   const handleDisconnect = () => {
     disconnect();
     router.push('/');
@@ -197,17 +220,25 @@ export default function Dashboard() {
         transition={{ delay: 0.1 }}
       >
         <div className="flex items-center gap-4 mb-6">
-          {/* Avatar */}
-          <motion.div
-            className="w-20 h-20 rounded-full flex items-center justify-center text-4xl
-                     shadow-lg border-4 border-white"
-            style={{ backgroundColor: address ? getAvatarColor(address) : '#FFB6C1' }}
+          {/* Avatar - Clickable to change */}
+          <motion.button
+            className="relative w-20 h-20 rounded-full flex items-center justify-center text-4xl shadow-lg border-4 border-white cursor-pointer group"
+            style={{ backgroundColor: currentAvatar.bg }}
+            onClick={() => setShowAvatarSelector(true)}
             whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {address ? getAvatarEmoji(address) : '😊'}
-          </motion.div>
+            <span>{currentAvatar.emoji}</span>
+            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="text-white text-sm">Edit</span>
+            </div>
+          </motion.button>
 
           <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm font-medium text-gray-700">{currentAvatar.name}</span>
+              <button onClick={() => setShowAvatarSelector(true)} className="text-xs text-crush-pink hover:underline">Change</button>
+            </div>
             <p className="font-mono text-sm text-gray-500">
               {address?.slice(0, 10)}...{address?.slice(-8)}
             </p>
@@ -354,6 +385,16 @@ export default function Dashboard() {
               setShowMatchReveal(false);
               setNewMatch(null);
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAvatarSelector && (
+          <AvatarSelector
+            currentAvatar={selectedAvatar}
+            onSelect={handleAvatarSelect}
+            onClose={() => setShowAvatarSelector(false)}
           />
         )}
       </AnimatePresence>
