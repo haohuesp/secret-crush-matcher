@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --crush-pink: #FF6B9D;
+  --crush-purple: #C9A7FF;
+  --crush-cream: #FFF5F5;
+  --blush: #FFCCD5;
+  --heart-red: #FF4D6D;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Nunito', 'Quicksand', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--crush-cream) 0%, var(--blush) 50%, var(--crush-purple) 100%);
+  min-height: 100vh;
+}
+
+/* Cute Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--crush-cream);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--crush-pink);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--heart-red);
+}
+
+/* Floating Hearts Background */
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.floating-heart {
+  position: fixed;
+  font-size: 20px;
+  animation: floatUp 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Shy Button Effect */
+.shy-button {
+  transition: all 0.3s ease;
+}
+
+.shy-button:hover {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
+
+.shy-button:hover::after {
+  content: '';
+  animation: shyRetreat 0.3s ease forwards;
+}
+
+@keyframes shyRetreat {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(0.9); }
+  100% { transform: scale(1.05); }
+}
+
+/* Blush Effect */
+.blush-effect {
+  position: relative;
+}
+
+.blush-effect::before,
+.blush-effect::after {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  background: radial-gradient(ellipse, rgba(255, 107, 157, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.blush-effect::before {
+  left: -40px;
+}
+
+.blush-effect::after {
+  right: -40px;
+}
+
+.blush-effect:hover::before,
+.blush-effect:hover::after {
+  opacity: 1;
+}
+
+/* Sparkle Effect */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Typewriter Effect */
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid var(--crush-pink);
+  white-space: nowrap;
+  animation:
+    typing 3.5s steps(40, end),
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--crush-pink) }
+}
+
+/* Glass Effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Heart Pulse */
+@keyframes heartPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+}
+
+.heart-pulse {
+  animation: heartPulse 1s ease-in-out infinite;
+}
+
+/* Confetti burst */
+@keyframes confettiBurst {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Shy Hand Styles */
+.shy-hand {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Match celebration */
+@keyframes celebrate {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.celebrate {
+  animation: celebrate 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
